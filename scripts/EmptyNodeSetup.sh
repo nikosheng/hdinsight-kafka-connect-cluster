@@ -1,7 +1,7 @@
 #! /bin/bash
 echo "Empty node setup"
 
-sudo apt install jq wget
+sudo apt install jq wget -y
 
 export password='Sheng@88509317'
 export clusterName=$(curl -u admin:$password -sS -G "http://headnodehost:8080/api/v1/clusters" | jq -r '.items[].Clusters.cluster_name')
