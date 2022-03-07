@@ -61,7 +61,7 @@
       "metadata": {
         "description": "This is the number of instance count of Edge node. If you don't want to specify, just leave the default value."
       }
-    },
+    }
   },
   "variables": {
     "applicationName": "new-edgenode"
