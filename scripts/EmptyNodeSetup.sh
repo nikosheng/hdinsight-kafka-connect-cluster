@@ -19,6 +19,7 @@ echo $clusterName
 echo $KAFKAZKHOSTS
 echo $KAFKABROKERS
 
+
 ## install confluent hub client
 cd /kafka/connect/tools/
 sudo wget http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz
