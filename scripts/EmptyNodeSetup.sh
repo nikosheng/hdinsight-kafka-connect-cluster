@@ -22,7 +22,7 @@ sudo tar zxvf confluent-hub-client-latest.tar.gz
 export PATH=$PATH:/kafka/connect/tools/bin
 
 ## configure connect-distributed.properties file
-cat << EOF > /kafka/connect/config/connect-distributed.properties
+sudo bash -c 'cat << EOF > /kafka/connect/config/connect-distributed.properties
 bootstrap.servers=${KAFKABROKERS}:9092
 group.id=connect-cluster-group
 
@@ -44,9 +44,9 @@ internal.key.converter.schemas.enable=false
 internal.value.converter.schemas.enable=false
 
 plugin.path=/kafka/connect/libs/
-EOF
+EOF'
 
-envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
+sudo envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
 
 # download kafka connectors denpendencies
 # sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties
