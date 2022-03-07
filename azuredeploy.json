@@ -61,10 +61,17 @@
 		  "metadata": {
 		    "description": "This is the number of instance count of Edge node. If you don't want to specify, just leave the default value."
 		  }
+		},
+    "ApplicationName": {
+		  "type": "string",
+		  "defaultValue": "new-app",
+		  "metadata": {
+		    "description": "This is the application name you need to setup"
+		  }
 		}
   },
   "variables": {
-    "applicationName": "new-edgenode"
+    "applicationName": "[parameters('ApplicationName')]"
   },
   "resources": [
     {
