@@ -18,38 +18,39 @@ sudo mkdir -p /kafka/connect/config/
 ## install confluent hub client
 cd /kafka/connect/tools/
 sudo wget http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz
+sudo tar zxvf confluent-hub-client-latest.tar.gz
 export PATH=$PATH:/kafka/connect/tools/bin
 
-# ## configure connect-distributed.properties file
-# cat << EOF > /kafka/connect/config/connect-distributed.properties
-# bootstrap.servers=${KAFKABROKERS}:9092
-# group.id=connect-cluster-group
+## configure connect-distributed.properties file
+cat << EOF > /kafka/connect/config/connect-distributed.properties
+bootstrap.servers=${KAFKABROKERS}:9092
+group.id=connect-cluster-group
 
-# # connect internal topic names, auto-created if not exists
-# config.storage.topic=connect-configs
-# offset.storage.topic=connect-offsets
-# status.storage.topic=connect-status
+# connect internal topic names, auto-created if not exists
+config.storage.topic=connect-configs
+offset.storage.topic=connect-offsets
+status.storage.topic=connect-status
 
-# # internal topic replication factors - auto 3x replication in Azure Storage
-# config.storage.replication.factor=1
-# offset.storage.replication.factor=1
-# status.storage.replication.factor=1
+# internal topic replication factors - auto 3x replication in Azure Storage
+config.storage.replication.factor=1
+offset.storage.replication.factor=1
+status.storage.replication.factor=1
 
-# offset.flush.interval.ms=10000
+offset.flush.interval.ms=10000
 
-# internal.key.converter=org.apache.kafka.connect.json.JsonConverter
-# internal.value.converter=org.apache.kafka.connect.json.JsonConverter
-# internal.key.converter.schemas.enable=false
-# internal.value.converter.schemas.enable=false
+internal.key.converter=org.apache.kafka.connect.json.JsonConverter
+internal.value.converter=org.apache.kafka.connect.json.JsonConverter
+internal.key.converter.schemas.enable=false
+internal.value.converter.schemas.enable=false
 
-# plugin.path=/kafka/connect/libs/
-# EOF
+plugin.path=/kafka/connect/libs/
+EOF
 
-# envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
+envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
 
-## download kafka connectors denpendencies
-# sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/
+# download kafka connectors denpendencies
+sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties
 
-## setup configurations in connect-distributed.properties
+# setup configurations in connect-distributed.properties
 
-## launch kafka connect cluster bin/connect-distributed.sh -daemon conf/connect-distributed.properties
+# launch kafka connect cluster bin/connect-distributed.sh -daemon conf/connect-distributed.properties
