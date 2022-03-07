@@ -49,7 +49,7 @@ EOF
 envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
 
 # download kafka connectors denpendencies
-sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties
+# sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties
 
 # setup configurations in connect-distributed.properties
 
