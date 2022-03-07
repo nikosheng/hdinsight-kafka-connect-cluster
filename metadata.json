@@ -1,9 +1,9 @@
 {
   "$schema": "https://aka.ms/azure-quickstart-templates-metadata-schema#",
   "itemDisplayName": "Deploy a HDInsight cluster with multiple edge nodes",
-  "description": "This template allows you to create an HDInsight cluster running Linux with multiple empty edge nodes. For more information, see https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-apps-use-edge-node",
-  "summary": "Deploy a Linux-based HDInsight cluster with multiple empty edge nodes",
+  "description": "This template allows you to create an HDInsight cluster running Linux with kafka connect cluster.",
+  "summary": "Deploy a Linux-based HDInsight cluster with kafka connect cluster",
   "githubUsername": "nikosheng",
-  "dateUpdated": "2022-02-21",
+  "dateUpdated": "2022-03-07",
   "type": "QuickStart"
 }
