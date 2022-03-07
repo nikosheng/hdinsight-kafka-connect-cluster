@@ -54,7 +54,14 @@
       "metadata": {
         "description": "This is the EdgeNode Azure Virtual Machine size, and will effect the cost.  If you don't know, just accept the default value."
       }
-    }
+    },
+    "EdgeNodeInstanceCount": {
+			"type": "int",
+			"defaultValue": 1,
+			"metadata": {
+				"description": "This is the number of instance count of Edge node. If you don't want to specify, just leave the default value."
+			}
+		}
   },
   "variables": {
     "applicationName": "new-edgenode"
@@ -70,7 +77,7 @@
           "roles": [
             {
               "name": "edgenode",
-              "targetInstanceCount": 1,
+              "targetInstanceCount": "[int(parameters('EdgeNodeInstanceCount'))]",
               "hardwareProfile": {
                 "vmSize": "[parameters('EdgeNodeVirtualMachineSize')]"
               }
