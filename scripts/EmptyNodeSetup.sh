@@ -3,17 +3,19 @@ echo "Empty node setup"
 
 sudo apt install jq wget -y
 
-export password='Sheng@88509317'
-export clusterName=$(curl -u admin:$password -sS -G "http://headnodehost:8080/api/v1/clusters" | jq -r '.items[].Clusters.cluster_name')
-export KAFKAZKHOSTS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/ZOOKEEPER/components/ZOOKEEPER_SERVER | jq -r '["\(.host_components[].HostRoles.host_name):2181"] | join(",")' | cut -d',' -f1,2);
-export KAFKABROKERS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/KAFKA/components/KAFKA_BROKER | jq -r '["\(.host_components[].HostRoles.host_name):9092"] | join(",")' | cut -d',' -f1,2);
-
 ## create kafka conenct dependencies directory
 sudo mkdir -p /kafka/connect/libs/
 sudo mkdir -p /kafka/connect/scripts/
 sudo mkdir -p /kafka/connect/tools/
 sudo mkdir -p /kafka/connect/tools/libs/
 sudo mkdir -p /kafka/connect/config/
+
+export password='Sheng@88509317'
+export clusterName=$(curl -u admin:$password -sS -G "http://headnodehost:8080/api/v1/clusters" | jq -r '.items[].Clusters.cluster_name')
+export KAFKAZKHOSTS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/ZOOKEEPER/components/ZOOKEEPER_SERVER | jq -r '["\(.host_components[].HostRoles.host_name):2181"] | join(",")' | cut -d',' -f1,2);
+export KAFKABROKERS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/KAFKA/components/KAFKA_BROKER | jq -r '["\(.host_components[].HostRoles.host_name):9092"] | join(",")' | cut -d',' -f1,2);
+
+sudo bash -c 'echo $clusterName > /kafka/connect/scripts/test'
 
 ## install confluent hub client
 cd /kafka/connect/tools/
@@ -46,7 +48,7 @@ internal.value.converter.schemas.enable=false
 plugin.path=/kafka/connect/libs/
 EOF'
 
-sudo envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties
+sudo bash -c 'envsubst '${KAFKABROKERS}' < /kafka/connect/config/connect-distributed.properties > /kafka/connect/config/connect-distributed.properties'
 
 # download kafka connectors denpendencies
 # sudo confluent-hub install confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/tools/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties
