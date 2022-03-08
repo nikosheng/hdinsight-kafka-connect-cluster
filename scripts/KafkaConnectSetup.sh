@@ -1,7 +1,12 @@
 #! /bin/bash
-echo "Empty node setup"
 
-sudo apt install jq wget -y
+##Install dependencies
+sudo apt-get update -y
+sudo apt-get install \
+curl \
+wget \
+jq \
+lsb-release -y
 
 ## create kafka conenct dependencies directory
 sudo mkdir -p /kafka/connect/libs/
@@ -11,10 +16,16 @@ sudo mkdir -p /kafka/connect/tools/libs/
 sudo mkdir -p /kafka/connect/config/
 sudo chmod 777 /kafka/connect
 
+## predefine system variables
 password='Sheng@88509317'
 clusterName=$(curl -u admin:$password -sS -G "http://headnodehost:8080/api/v1/clusters" | jq -r '.items[].Clusters.cluster_name')
 KAFKAZKHOSTS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/ZOOKEEPER/components/ZOOKEEPER_SERVER | jq -r '["\(.host_components[].HostRoles.host_name):2181"] | join(",")' | cut -d',' -f1,2);
 KAFKABROKERS=$(curl -sS -u admin:$password -G https://$clusterName.azurehdinsight.net/api/v1/clusters/$clusterName/services/KAFKA/components/KAFKA_BROKER | jq -r '["\(.host_components[].HostRoles.host_name):9092"] | join(",")' | cut -d',' -f1,2);
+
+## create kafka topics required by kafka connect distributed mode, please do not reduce the partition numbers
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --replication-factor 3 --partitions 8 --topic connect-offsets --zookeeper $KAFKAZKHOSTS
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --replication-factor 3 --partitions 25 --topic connect-configs --zookeeper $KAFKAZKHOSTS
+/usr/hdp/current/kafka-broker/bin/kafka-topics.sh --create --replication-factor 3 --partitions 8 --topic connect-status --zookeeper $KAFKAZKHOSTS
 
 ## install confluent hub client
 cd /kafka/connect/tools/
@@ -56,6 +67,7 @@ sudo bash -c "echo 'bootstrap.servers=${KAFKABROKERS}' >> /kafka/connect/config/
 
 # download kafka connectors denpendencies
 sudo bash -c "/kafka/connect/tools/bin/confluent-hub install --no-prompt confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties"
+sudo bash -c "/kafka/connect/tools/bin/confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest --component-dir /kafka/connect/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties"
 
 # launch kafka connect cluster bin/connect-distributed.sh -daemon conf/connect-distributed.properties
 sudo bash -c "/usr/hdp/current/kafka-broker/bin/connect-distributed.sh -daemon /kafka/connect/config/connect-distributed.properties"
