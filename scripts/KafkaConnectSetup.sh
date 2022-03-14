@@ -68,7 +68,7 @@ sudo bash -c "echo 'bootstrap.servers=${KAFKABROKERS}' >> /kafka/connect/config/
 # download kafka connectors denpendencies
 sudo bash -c "/kafka/connect/tools/bin/confluent-hub install --no-prompt confluentinc/kafka-connect-azure-data-lake-gen2-storage:latest --component-dir /kafka/connect/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties"
 sudo bash -c "/kafka/connect/tools/bin/confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest --component-dir /kafka/connect/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties"
-sudo wget https://maven.repository.redhat.com/earlyaccess/all/io/confluent/kafka-avro-serializer/5.3.0/kafka-avro-serializer-5.3.0.jar
+sudo bash -c "/kafka/connect/tools/bin/confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:7.0.1 --component-dir /kafka/connect/libs/ --worker-configs /kafka/connect/config/connect-distributed.properties"
 
 # launch kafka connect cluster bin/connect-distributed.sh -daemon conf/connect-distributed.properties
 sudo bash -c "/usr/hdp/current/kafka-broker/bin/connect-distributed.sh -daemon /kafka/connect/config/connect-distributed.properties"
