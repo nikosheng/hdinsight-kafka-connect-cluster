@@ -71,5 +71,3 @@ services:
      - MYSQL_USER=mysqluser
      - MYSQL_PASSWORD=mysqlpw
 EOF"
-
-sudo docker-compose -f docker-compose.yaml up -d
